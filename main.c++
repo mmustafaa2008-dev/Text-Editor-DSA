@@ -126,13 +126,68 @@ void Deletecontroller()
     cout << "3- Back "<<endl;
     cout << "Choose the Above Option : "<<endl;
 }
-void deletenew(struct Node* T) // here T consider as a head of Node
+void deletenew(struct Node*& T) // here T consider as a head of Node
 {
+    int line,count;
+    count = 1;
+    cout << "Enter the Line Number : ";
+    cin >> line;
 
+    if(T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if(line <= 0)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+
+    if(line == 1)
+    {
+        struct Node*special = T;
+        T = T->next;  // changing the head position forward
+        if(T != nullptr)
+        {
+            T->prev = nullptr; 
+        }
+        delete special;
+        return;
+    }
+
+    struct Node*temp;
+    temp = T;
+    while (temp != nullptr && count < line-1)
+    {
+        temp = temp->next;
+        count++;
+    }
+
+    if(temp == nullptr)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+
+    struct Node* var = temp->next;  // for storing the address of the element which is going to be delete; 
+    if(var == nullptr)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+    
+    temp ->next = var ->next;
+    if(var ->next != nullptr)
+    {
+        var ->next ->prev = temp;
+    }
+    delete var;
 }
 void deleteatpos(struct Node*T)
 {
-    
+
 }
 void controller()
 {
