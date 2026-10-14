@@ -119,11 +119,13 @@ void insertatpos(struct Node *T)
     }
 }
 void insertatend(struct Node *T) //  Will work on this at the end
-    void Deletecontroller()
+{}
+void Deletecontroller()
 {
     cout << "1- Delete Text in New Line " << endl;
     cout << "2- Delete Text at Position " << endl;
-    cout << "3- Back " << endl;
+    cout << "3- Delete Range of Line " << endl;
+    cout << "0- Back " << endl;
     cout << "Choose the Above Option : " << endl;
 }
 void deletenew(struct Node *&T) // here T consider as a head of Node
@@ -236,6 +238,80 @@ void deleteatpos(struct Node *&T)
         cout << "Text Not Found in this Line!";
     }
 }
+void deleterange(struct Node *&T)
+{
+    int start, end, count = 0;
+
+    cout << "Enter Starting Line: ";
+    cin >> start;
+
+    cout << "Enter Ending Line: ";
+    cin >> end;
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+    struct Node *temp = T;
+    while (temp !=nullptr)
+    {
+        count++;
+        temp=temp->next;
+    }
+    
+
+    if (start < 1 || end < start || end > count)
+    {
+        cout << "Invalid Line Range!";
+        return;
+    }
+
+    temp = T;
+    count = 1;
+    // Move to the starting line
+    while (count < start)
+    {
+        temp = temp->next;
+        count++;
+    }
+
+    if (temp == nullptr)
+    {
+        cout << "Invalid Starting Line!";
+        return;
+    }
+    
+    struct Node *before = temp->prev;
+
+    // Delete nodes from start to end
+    count = start;
+
+    while (count <= end)
+    {
+        struct Node *del = temp;
+        temp = temp->next;
+        delete del;
+        count++;
+    }
+
+    // Reconnect the remaining list
+    if (before != nullptr)
+    {
+        before->next = temp;
+    }
+    else
+    {
+        T = temp;
+    }
+
+    if (temp != nullptr)
+    {
+        temp->prev = before;
+    }
+
+    cout << "Lines Deleted Successfully!";
+}
 void controller()
 {
     cout << "Welcome to the Text Editor" << endl;
@@ -272,7 +348,6 @@ void controller()
                     insertatpos();
                     break;
                 default:
-                    return;
                     break;
                 }
                 break;
@@ -282,7 +357,15 @@ void controller()
                 switch (choice)
                 {
                 case 1:
+                    deletenew();
+                    break;
 
+                case 2:
+                    deleteatpos();
+                    break;
+
+                case 3:
+                    deleterange();
                     break;
 
                 default:
