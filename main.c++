@@ -53,7 +53,7 @@ void insertnew(struct Node* T) // here considering the T as head of the NODE
     n = T;
     int count =1;
 
-    while (n != nullptr && count < no)
+    while (n != nullptr && count < no-1)  // here we using no-1 because insert before the line numbera
     {
         n = n->next;
         count ++;
@@ -65,11 +65,13 @@ void insertnew(struct Node* T) // here considering the T as head of the NODE
         cout << "Invalid line number!";
         return;
     }
-    temp ->next = n;
-    temp -> prev = n-prev;
+    temp ->next = n->next;
+    temp -> prev = n;
+    if(n->next != nullptr)
+    {
+        n->next->prev = temp;
+    }
     n->next = temp;
-    n->next->prev = temp;
-    count++;
 }
 void controller()
 {
