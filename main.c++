@@ -1,6 +1,7 @@
 #include <iostream>
+#include <string>   // for using the functionality of the string 
 using namespace std;
-void secontroller()
+void Editorcontroller()   // for showing the menu
 {
     cout << "1- Insert Text Selected " << endl;
     cout << "2- Delete Text Selected " << endl;
@@ -12,6 +13,63 @@ void secontroller()
     cout << "8- Save Document " << endl;
     cout << "0- Exit" << endl;
     cout << "Choose the Above Option ";
+}
+void Insertcontroller()
+{
+    cout << "1- Insert New Line "<<endl;
+    cout << "2- Insert at Position "<<endl;
+    cout << "3- Back "<<endl;
+    cout << "Choose the Above Option "<<endl;
+} 
+struct Node   //  creating the doubly linked list here every line is node 
+{
+    string text;  //  for storing the text
+    Node* next;   // for storing the next line address
+    Node* prev;  // for storing the previous line address
+};
+
+void insertnew(struct Node* T) // here considering the T as head of the NODE
+{
+    int no;
+    string t;
+    cout << "Enter the Line Number : ";
+    cin >> no;
+
+    cin.ignore();
+
+    cout << "Enter The Text to Enter : ";
+    getline(cin, t);
+    struct Node* temp;  // for storing the info in the node
+    struct Node* n;  //  for transversing
+    temp = new Node();
+    temp ->text = t;
+    if(T== nullptr)
+    {
+        T = temp;
+        temp -> next = nullptr;
+        temp -> prev = nullptr;
+        return;
+    }
+    n = T;
+    int count =1;
+
+    while (n != nullptr && count < no)
+    {
+        n = n->next;
+        count ++;
+    }
+
+    if(n == nullptr || no < 1)
+    {
+        delete temp;
+        cout << "Invalid line number!";
+        return;
+    }
+    temp ->next = n;
+    temp -> prev = n-prev;
+    n->next = temp;
+    n->next->prev = temp;
+    count++;
 }
 void controller()
 {
@@ -32,12 +90,22 @@ void controller()
             break;
 
         case 2:
-            secontroller();
+            Editorcontroller();
             cin >> choice;
             switch (choice)
             {
             case 1:
-                // for inserting the text //  using the 
+                Insertcontroller();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                    insertnew();
+                    break;
+                
+                default:
+                    break;
+                }
                 break;
             
             default:
