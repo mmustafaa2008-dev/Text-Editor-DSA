@@ -118,76 +118,123 @@ void insertatpos(struct Node *T)
         return;
     }
 }
-void insertatend(struct Node *T)  //  Will work on this at the end
-void Deletecontroller()
+void insertatend(struct Node *T) //  Will work on this at the end
+    void Deletecontroller()
 {
-    cout << "1- Delete Text in New Line "<<endl;
-    cout << "2- Delete Text at Position "<<endl;
-    cout << "3- Back "<<endl;
-    cout << "Choose the Above Option : "<<endl;
+    cout << "1- Delete Text in New Line " << endl;
+    cout << "2- Delete Text at Position " << endl;
+    cout << "3- Back " << endl;
+    cout << "Choose the Above Option : " << endl;
 }
-void deletenew(struct Node*& T) // here T consider as a head of Node
+void deletenew(struct Node *&T) // here T consider as a head of Node
 {
-    int line,count;
+    int line, count;
     count = 1;
     cout << "Enter the Line Number : ";
     cin >> line;
 
-    if(T == nullptr)
+    if (T == nullptr)
     {
         cout << "Empty Document!";
         return;
     }
 
-    if(line <= 0)
+    if (line <= 0)
     {
         cout << "Invalid Line Number!";
         return;
     }
 
-    if(line == 1)
+    if (line == 1)
     {
-        struct Node*special = T;
-        T = T->next;  // changing the head position forward
-        if(T != nullptr)
+        struct Node *special = T;
+        T = T->next; // changing the head position forward
+        if (T != nullptr)
         {
-            T->prev = nullptr; 
+            T->prev = nullptr;
         }
         delete special;
         return;
     }
 
-    struct Node*temp;
+    struct Node *temp;
     temp = T;
-    while (temp != nullptr && count < line-1)
+    while (temp != nullptr && count < line - 1)
     {
         temp = temp->next;
         count++;
     }
 
-    if(temp == nullptr)
+    if (temp == nullptr)
     {
         cout << "Invalid Line Number!";
         return;
     }
 
-    struct Node* var = temp->next;  // for storing the address of the element which is going to be delete; 
-    if(var == nullptr)
+    struct Node *var = temp->next; // for storing the address of the element which is going to be delete;
+    if (var == nullptr)
     {
         cout << "Invalid Line Number!";
         return;
     }
-    
-    temp ->next = var ->next;
-    if(var ->next != nullptr)
+
+    temp->next = var->next;
+    if (var->next != nullptr)
     {
-        var ->next ->prev = temp;
+        var->next->prev = temp;
     }
     delete var;
 }
-void deleteatpos(struct Node*T)
+void deleteatpos(struct Node *&T)
 {
+    int line, count;
+    size_t index;
+    string t;
+    count = 1;
+    cout << "Enter the Line Number : ";
+    cin >> line;
 
+    cin.ignore();
+    do
+    {
+        getline(cin, t);
+    } while (t.empty());
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if (line <= 0)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+
+    struct Node *temp = T;
+    while (temp != nullptr && count < line)
+    {
+        temp = temp->next;
+        count++;
+    }
+
+    if (temp == nullptr)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+
+    index = temp->text.find(t);
+    if (index != string::npos) // here npos stands for not found
+    {
+        temp->text.erase(index, t.length());
+        cout << "Text Deleted Successfully!";
+    }
+    else
+    {
+        cout << "Text Not Found in this Line!";
+    }
 }
 void controller()
 {
@@ -212,7 +259,7 @@ void controller()
             cin >> choice;
             switch (choice)
             {
-            case 1:   // dealing with inserting module
+            case 1: // dealing with inserting module
                 Insertcontroller();
                 cin >> choice;
                 switch (choice)
@@ -229,18 +276,18 @@ void controller()
                     break;
                 }
                 break;
-            case 2:  // dealing with deleting module
-            Deletecontroller();
-            cin >> choice;
-            switch (choice)
-            {
-            case 1:
-                
-                break;
-            
-            default:
-                break;
-            }
+            case 2: // dealing with deleting module
+                Deletecontroller();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+
+                    break;
+
+                default:
+                    break;
+                }
             default:
                 break;
             }
