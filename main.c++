@@ -119,7 +119,8 @@ void insertatpos(struct Node *T)
     }
 }
 void insertatend(struct Node *T) //  Will work on this at the end
-{}
+{
+}
 void Deletecontroller()
 {
     cout << "1- Delete Text in New Line " << endl;
@@ -254,12 +255,11 @@ void deleterange(struct Node *&T)
         return;
     }
     struct Node *temp = T;
-    while (temp !=nullptr)
+    while (temp != nullptr)
     {
         count++;
-        temp=temp->next;
+        temp = temp->next;
     }
-    
 
     if (start < 1 || end < start || end > count)
     {
@@ -281,7 +281,7 @@ void deleterange(struct Node *&T)
         cout << "Invalid Starting Line!";
         return;
     }
-    
+
     struct Node *before = temp->prev;
 
     // Delete nodes from start to end
@@ -311,6 +311,46 @@ void deleterange(struct Node *&T)
     }
 
     cout << "Lines Deleted Successfully!";
+}
+void searchcontroller()
+{
+    cout << "1- Search Text in Document " << endl;
+    cout << "2- Search Text in Specific Line " << endl;
+    cout << "3- Search Text Without Case Sensitive " << endl;
+    cout << "0- Exit " << endl;
+    cout << "Choose the Above Option : ";
+}
+void searchtext(struct Node *T, string element)
+{
+    struct Node *temp = T;
+    int count = 0;
+    int occ = 0; // for storing the occurrence of the element in the line or document
+    if (temp == nullptr)
+    {
+        cout << "Empty Document" << endl;
+        return;
+    }
+    while (temp != nullptr)
+    {
+        size_t index = temp->text.find(element); //  for storing the index of the string
+        while (index != string::npos)
+        {
+            cout << "Line Number : " << count << endl;
+            cout << "Index Number : " << index << endl;
+            oc++;
+            index = temp->text.find(element, index + element.length());
+        }
+        temp = temp->next;
+        count++;
+    }
+    if (occ > 0)
+    {
+        cout << "Total Occurrences: " << occ << endl;
+    }
+    else
+    {
+        cout << "Text Not Found in the Document!" << endl;
+    }
 }
 void controller()
 {
@@ -371,10 +411,20 @@ void controller()
                 default:
                     break;
                 }
+                break;
+
+            case 3:
+                searchcontroller();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                }
             default:
                 break;
             }
             break;
+
         default:
             break;
         }
