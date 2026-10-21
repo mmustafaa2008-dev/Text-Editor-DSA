@@ -28,7 +28,7 @@ void Insertcontroller()
     cout << "3- Back " << endl;
     cout << "Choose the Above Option : " << endl;
 }
-void insertnew(struct Node *T) // here considering the T as head of the NODE
+void insertnew(struct Node *&T) // here considering the T as head of the NODE
 {
     int no;
     string t;
@@ -669,6 +669,29 @@ void ignorecasesensitive(struct Node *T) // here replacing all case insensitive 
         cout << "Text Not Found in the Document!" << endl;
     }
 }
+void displaydocument(struct Node* T)
+{
+    int line=0,character=0;
+    if(T==nullptr)
+    {
+        cout << "Empty Document!"<<endl;
+        cout << "Total Line : 0 "<<endl;
+        cout << "Total Character : 0 "<<endl;
+        return;
+    }
+    
+    struct Node*temp = T;
+    while (temp != nullptr)
+    {
+        line++;
+        character += temp->text.length();
+        cout << "Line "<<line<<" "<<temp->text <<endl;
+        temp = temp->next;
+    }
+
+    cout << "Total Line : "<<line<<endl;
+    cout << "Total Character : "<<character<<endl;
+}
 void controller()
 {
     cout << "Welcome to the Text Editor" << endl;
@@ -775,7 +798,16 @@ void controller()
                 }
                 break;
 
-            case 5:
+            case 5:  // undo
+            break;
+
+            case 6:  // redo
+            break;
+
+            case 7:  // display document
+            displaydocument();
+            break;
+
 
             default:
                 break;
