@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string> // for using the functionality of the string
+#include <cctype> //  for comparing the lower and upper case
 using namespace std;
 struct Node //  creating the doubly linked list here every line is node
 {
@@ -9,12 +10,12 @@ struct Node //  creating the doubly linked list here every line is node
 };
 void Editorcontroller() // for showing the menu
 {
-    cout << "1- Insert Text Selected " << endl;
-    cout << "2- Delete Text Selected " << endl;
-    cout << "3- Undo The Text " << endl;
-    cout << "4- Redo the Text " << endl;
-    cout << "5- Search Text " << endl;
-    cout << "6- Replace Text " << endl;
+    cout << "1- Insert Text Selected " << endl; // done
+    cout << "2- Delete Text Selected " << endl; // done
+    cout << "3- Search Text " << endl;
+    cout << "4- Replace Text " << endl;
+    cout << "5- Undo The Text " << endl; // done
+    cout << "6- Redo the Text " << endl; //  done
     cout << "7- Display Document " << endl;
     cout << "8- Save Document " << endl;
     cout << "0- Exit" << endl;
@@ -323,7 +324,7 @@ void searchcontroller()
 void searchtext(struct Node *T, string element)
 {
     struct Node *temp = T;
-    int count = 0;
+    int count = 1;
     int occ = 0; // for storing the occurrence of the element in the line or document
     if (temp == nullptr)
     {
@@ -332,13 +333,13 @@ void searchtext(struct Node *T, string element)
     }
     while (temp != nullptr)
     {
-        size_t index = temp->text.find(element); //  for storing the index of the string
-        while (index != string::npos)
+        size_t index = temp->text.find(element); //  for storing the index of the text if found
+        while (index != string::npos)            // searching for the text in the same line
         {
             cout << "Line Number : " << count << endl;
             cout << "Index Number : " << index << endl;
             oc++;
-            index = temp->text.find(element, index + element.length());
+            index = temp->text.find(element, index + element.length()); // if found the index then we add the element index + length of the text for finding next text
         }
         temp = temp->next;
         count++;
@@ -346,6 +347,322 @@ void searchtext(struct Node *T, string element)
     if (occ > 0)
     {
         cout << "Total Occurrences: " << occ << endl;
+    }
+    else
+    {
+        cout << "Text Not Found in the Document!" << endl;
+    }
+}
+void specifictext(struct Node *T)
+{
+    int line;
+    string text;
+    cout << "Enter the Line Number : ";
+    cin >> line;
+    int count = 1;
+
+    if (line < 1)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+    cin.ignore();
+
+    cout << "Enter the Desired Text To Search : ";
+    getline(cin, text);
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document";
+        return;
+    }
+
+    if (text.empty())
+    {
+        cout << "Search text cannot be empty!";
+        return;
+    }
+
+    struct Node *temp = T;
+    while (temp != nullptr && count < line) // transver for going to the specific line number
+    {
+        temp = temp->next;
+        count++;
+    }
+    if (temp == nullptr)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+
+    int occ = 0;
+
+    size_t index = temp->text.find(text);
+    while (index != npos)
+    {
+        cout << "Index Number : " << index << endl;
+        occ++;
+        index = temp->text.find(text, index + text.length());
+    }
+    if (occ > 0)
+    {
+        cout << "Total Occurrences: " << occ << endl;
+    }
+    else
+    {
+        cout << "Text Not Found in the Line Number " << line << endl;
+    }
+}
+void caseinsensitivesearch(struct Node *T, string element)
+{
+    struct Node *temp = T;
+    int count = 1;
+    int occ = 0; // for storing the occurrence of the element in the line or document
+    if (temp == nullptr)
+    {
+        cout << "Empty Document" << endl;
+        return;
+    }
+    for (int i = 0; i < element.length(); i++)
+    {
+        element[i] = tolower(element[i]);
+    }
+    while (temp != nullptr)
+    {
+        string line = temp->text;
+        for (int i = 0; i < line.length(); i++)
+        {
+            line[i] = tolower(line[i]);
+        }
+        size_t index = line.find(element); //  for storing the index of the text if found
+        while (index != string::npos)      // searching for the text in the same line
+        {
+            cout << "Line Number : " << count << endl;
+            cout << "Index Number : " << index << endl;
+            oc++;
+            index = line.find(element, index + element.length()); // if found the index then we add the element index + length of the text for finding next text
+        }
+        temp = temp->next;
+        count++;
+    }
+    if (occ > 0)
+    {
+        cout << "Total Occurrences: " << occ << endl;
+    }
+    else
+    {
+        cout << "Text Not Found in the Document!" << endl;
+    }
+}
+void replacecontroller()
+{
+    cout << "1- Replace Specific Occurence " << endl;
+    cout << "2- Replace All Occurence " << endl;
+    cout << "3- Replace In Line " << endl;
+    cout << "4- Replace Case Insensitive Word " << endl;
+    cout << "0- Exit " << endl;
+    cout << "Select The Above Option : ";
+}
+void specificoccurence(struct Node *T) // replacing all specific number occurence in the document
+{
+    string t, r;
+    int occ;
+    cout << "Enter the Text to Replace : ";
+    getline(cin, t);
+
+    cout << "Enter the Replace Text : ";
+    getline(cin, r);
+
+    cout << "Enter the Occurence Number : ";
+    cin >> occ;
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if (t.empty() || occ < 1)
+    {
+        cout << "Invalid Input!";
+        return;
+    }
+
+    struct Node *temp = T;
+    int count = 0;
+    while (temp != nullptr)
+    {
+        size_t index = temp->text.find(t);
+
+        while (index != npos || count < occ)
+        {
+            count++;
+            if (count == occ)
+            {
+                temp->text.erase(index, t.length());
+                temp->text.insert(index, r);
+                cout << "Text Replaced Successfully!";
+                return;
+            }
+            index = temp->text.find(t, index + t.length());
+        }
+        temp = temp->next;
+    }
+    cout << "Specified Occurrence Not Found!";
+}
+void alloccurence(struct Node *T) // replacing all the occurence in the document
+{
+    string t, r;
+    cout << "Enter the Text to Replace : ";
+    getline(cin, t);
+
+    cout << "Enter the Replace Text : ";
+    getline(cin, r);
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if (t.empty())
+    {
+        cout << "Invalid Input!";
+        return;
+    }
+
+    int count = 0;
+    struct Node *temp = T;
+
+    while (temp != nullptr)
+    {
+        size_t index = temp->text.find(t);
+
+        while (index != npos)
+        {
+            temp->text.erase(index, t.length());
+            temp->text.insert(index, r);
+            count++;
+            index = temp->text.find(t, index + r.length());
+        }
+        temp = temp->next;
+    }
+    if (count == 0)
+    {
+        cout << "Word Not Found In the Entire Document!" << endl;
+        return;
+    }
+    cout << "Replaced " << count << " Occurrences Successfully!" << endl;
+}
+void occurenceinline(struct Node *T) // replacing the occurence in the specific line number
+{
+    string t, r;
+    int line;
+    cout << "Enter the Text to Replace : ";
+    getline(cin, t);
+
+    cout << "Enter the Replace Text : ";
+    getline(cin, r);
+
+    cout << "Enter the Line Number : ";
+    cin >> line;
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if (t.empty() || line < 1)
+    {
+        cout << "Invalid Input!";
+        return;
+    }
+
+    int count = 1;
+    struct Node *temp = T;
+    while (temp != nullptr && count < line) // going toward the desired line number
+    {
+        count++;
+        temp = temp->next;
+    }
+
+    if (temp == nullptr)
+    {
+        cout << "Invalid Line Number!";
+        return;
+    }
+    size_t index = temp->text.find(t);
+
+    int occ = 0;
+    while (index != npos)
+    {
+        temp->text.erase(index, t.length());
+        temp->text.insert(index, r);
+        occ++;
+        index = temp->text.find(t, index + r.length());
+    }
+
+    if (occ == 0)
+        cout << "Text Not Found in the Specified Line!";
+    else
+        cout << "Replaced " << occ << " Occurrences Successfully!";
+}
+void ignorecasesensitive(struct Node *T) // here replacing all case insensitive word
+{
+    string t, r;
+
+    cout << "Enter the Text to Replace: ";
+    getline(cin, t);
+
+    cout << "Enter the Replace Text: ";
+    getline(cin, r);
+
+    if (T == nullptr)
+    {
+        cout << "Empty Document!";
+        return;
+    }
+
+    if (t.empty())
+    {
+        cout << "Invalid Input!";
+        return;
+    }
+    struct Node *temp = T;
+    int occ = 0; // for storing the occurrence of the element in the line or document
+
+    for (int i = 0; i < t.length(); i++)
+    {
+        t[i] = tolower(t[i]);
+    }
+    while (temp != nullptr)
+    {
+        string line = temp->text;
+        for (int i = 0; i < line.length(); i++)
+        {
+            line[i] = tolower(line[i]);
+        }
+        size_t index = line.find(t); //  for storing the index of the text if found
+
+        while (index != string::npos) // searching for the text in the same line
+        {
+            temp->text.erase(index, t.length());
+            temp->text.insert(index, r);
+            oc++;
+
+            line = temp->text;
+            for (int i = 0; i < line.lenth(); i++)
+            {
+                line[i] = tolower(line[i]); // update the lower after the replacement
+            }
+            index = line.find(t, index + r.length()); // if found the index then we add the element index + length of the text for finding next text
+        }
+        temp = temp->next;
+    }
+    if (occ > 0)
+    {
+        cout << "Replaced " << occ << " Occurrences Successfully!";
     }
     else
     {
@@ -414,21 +731,58 @@ void controller()
                 break;
 
             case 3:
-                searchcontroller();
+                searchcontroller(); // dealing with Search Module
                 cin >> choice;
                 switch (choice)
                 {
                 case 1:
+                    searchtext();
+                    break;
+
+                case 2:
+                    specifictext(); // for searching the desired text in the specific line number
+                    break;
+
+                case 3:
+                    caseinsensitivesearch();
+                    break;
                 }
+                break;
+
+            case 4:
+                replacecontroller(); //  dealing with Replace Module
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                    specificoccurence();
+                    break;
+
+                case 2:
+                    alloccurence();
+                    break;
+
+                case 3:
+                    occurenceinline();
+                    break;
+
+                case 4:
+                    ignorecasesensitive();
+                    break;
+
+                default:
+                    break;
+                }
+                break;
+
+            case 5:
+
             default:
                 break;
             }
-            break;
-
-        default:
-            break;
         }
-    } while (choice != 0);
+        while (choice != 0);
+    }
 }
 int main()
 {
